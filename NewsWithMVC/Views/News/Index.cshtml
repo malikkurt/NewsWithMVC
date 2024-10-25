@@ -1,0 +1,217 @@
+﻿@model List<NewsWithMVC.Models.News>
+
+@{
+    ViewData["Title"] = "News Page";
+}
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f2f5f7;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #2d3436;
+        margin-bottom: 40px;
+        font-size: 2.5em;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+    }
+
+    .news-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 10px;
+    }
+
+    .news-item {
+        display: flex;
+        background: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        margin: 20px 0;
+        padding: 20px;
+        width: 100%;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .news-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #ff7675, #74b9ff, #55efc4);
+            transition: width 0.4s ease;
+        }
+
+        .news-item:hover::before {
+            width: 100%;
+        }
+
+        .news-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+    .news-image {
+        width: 160px;
+        height: 160px;
+        border-radius: 15px;
+        margin-right: 25px;
+        object-fit: cover;
+        border: 2px solid #dfe6e9;
+        transition: border-color 0.3s;
+    }
+
+    .news-item:hover .news-image {
+        border-color: #74b9ff;
+    }
+
+    .news-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex-grow: 1;
+    }
+
+    .news-title {
+        font-size: 1.6em;
+        color: #0984e3;
+        margin: 0;
+        transition: color 0.3s ease;
+        font-weight: bold;
+    }
+
+        .news-title:hover {
+            color: #6c5ce7;
+        }
+
+    .news-description {
+        font-size: 1.1em;
+        color: #636e72;
+        margin-top: 10px;
+        line-height: 1.6;
+    }
+
+    .news-source {
+        font-size: 0.9em;
+        color: #b2bec3;
+        margin-top: 20px;
+    }
+
+    .read-more {
+        text-decoration: none;
+        font-size: 1em;
+        color: #00b894;
+        margin-top: 15px;
+        font-weight: bold;
+        display: inline-block;
+        transition: color 0.3s ease;
+    }
+
+        .read-more:hover {
+            color: #0984e3;
+        }
+
+    form {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+        gap: 15px;
+    }
+
+        form label {
+            font-weight: bold;
+            color: #2d3436;
+        }
+
+        form select {
+            padding: 10px 15px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: 1px solid #dfe6e9;
+            background-color: #fff;
+            color: #2d3436;
+            transition: border-color 0.3s ease;
+        }
+
+            form select:focus {
+                border-color: #74b9ff;
+            }
+
+        form button {
+            padding: 10px 20px;
+            background-color: #0984e3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            form button:hover {
+                background-color: #6c5ce7;
+            }
+
+</style>
+
+<form method="get" asp-controller="News" asp-action="Index">
+    <label for="country">Ülke:</label>
+    <select name="country" id="country">
+        <option value="tr">Türkiye</option>
+        <option value="de">Almanya</option>
+        <option value="en">İngiltere</option>
+        <option value="ru">Rusya</option>
+    </select>
+
+    <label for="tags">Kategoriler:</label>
+    <select name="tags" id="tags">
+        <option value="general">Genel</option>
+        <option value="sport">Spor</option>
+        <option value="economy">Ekonomi</option>
+        <option value="technology">Teknoloji</option>
+    </select>
+
+    <label for="language">Dil:</label>
+    <select name="language" id="language">
+        <option value="tr">Türkçe</option>
+        <option value="de">Almanca</option>
+        <option value="en">İngilizce</option>
+        <option value="ru">Rusça</option>
+        <!-- Diğer diller -->
+    </select>
+
+    <button type="submit">Filtrele</button>
+</form>
+
+<div class="news-container">
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var news in Model)
+        {
+            <div class="news-item">
+                <img src="@news.image" alt="@news.name" class="news-image" />
+                <div class="news-content">
+                    <h3 class="news-title">@news.name</h3>
+                    <p class="news-description">@news.description</p>
+                    <p class="news-source">Kaynak: @news.source</p>
+                    <a href="@news.url" target="_blank" class="read-more">Devamını oku <i class="fas fa-external-link-alt"></i></a>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Haber bulunamadı.</p>
+    }
+</div>
